@@ -2,13 +2,26 @@
 set -e
 
 WORKTREE=$(mktemp -d)
+FAKE_FACTER_FILE="facter.json"
+
 cleanup() {
     git worktree remove --force "$WORKTREE" 2>/dev/null || true
     rm -rf "$WORKTREE"
+
+    git restore --staged "$FAKE_FACTER_FILE"
+    rm -f "$FAKE_FACTER_FILE"
 }
-trap cleanup EXIT INT TERM
 
-git worktree add --detach "$WORKTREE" HEAD
+setup() {
+    git worktree add --detach "$WORKTREE" HEAD
+    trap cleanup EXIT INT TERM
 
-cd "$WORKTREE"
+    cd "$WORKTREE"
+
+    echo "{}" > "$FAKE_FACTER_FILE"
+    git add -f "$FAKE_FACTER_FILE"
+}
+
+setup
 bash scripts/shellcheck.sh
+bash scripts/nixos-rebuild-dry-build.sh
