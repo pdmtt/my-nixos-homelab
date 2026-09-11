@@ -20,6 +20,7 @@ in {
         };
       };
 
+      # we need DHCP in initrd to SSH into the machine to unlock the LUKS partition
       # DHCP in initrd requires the ip= kernel parameter
       kernelParams = [ "ip=dhcp" ];
 
@@ -86,6 +87,13 @@ in {
           port = 53;
         };
       };
+    };
+
+    logind.settings.Login = {
+      # my homelab is an old laptop that I like keeping closed :)
+      HandleLidSwitch = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
+      HandleLidSwitchDocked = "ignore";
     };
 
     openssh = {
