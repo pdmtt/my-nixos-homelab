@@ -3,7 +3,7 @@
 # Validates the repository by running `shellcheck` on every `.sh` file it contains
 #
 # Usage:
-#   bash scripts/repo-validate.sh
+#   bash scripts/shellcheck.sh
 
 set -e
 cd "$(dirname "${BASH_SOURCE[0]}")/.."

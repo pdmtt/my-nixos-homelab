@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+WORKTREE=$(mktemp -d)
+cleanup() {
+    git worktree remove --force "$WORKTREE" 2>/dev/null || true
+    rm -rf "$WORKTREE"
+}
+trap cleanup EXIT INT TERM
+
+git worktree add --detach "$WORKTREE" HEAD
+
+cd "$WORKTREE"
+bash scripts/shellcheck.sh
