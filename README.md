@@ -1,4 +1,4 @@
-# nix-self-hosted
+# My NixOS Homelab
 
 The setup of my self-hosted services using the `nix` ecosystem.
 
@@ -6,7 +6,7 @@ The setup of my self-hosted services using the `nix` ecosystem.
 
 - Works on both BIOS and UEFI machines
 - Encryption at rest using LVM on LUKS
-- Allows uncrypting remotely using SSH in initrd
+- Allows LAN uncryption by SSHing into initrd
 - Security hardened: /boot readable only by root, SSH pass auth off and root login blocked
 
 ## Requirements
@@ -38,7 +38,7 @@ As per its [Github repository](https://github.com/nix-community/nixos-anywhere)'
 >
 > After installing NixOS for the first time on the target, the `admin` user has the default password of `admin`.
 >
-> You MUST change it using `passwd admin` for security reasons.
+> You SHOULD change it using `passwd admin` out-of-band for security reasons.
 
 ```bash
 export TMP_SECRETS_DIR="/tmp/_secrets"
@@ -53,7 +53,7 @@ mkdir -p "$INITRD_SECRETS_DIR" \
         <root-or-sudoer>@<target-host>
 ```
 
-> [!INFO]
+> [!IMPORTANT]
 >
 > This command will write a `facter.json` file to your local machine. This file is gitignored, but SHOULD be kept because
 > it is needed for future configuration changes.
@@ -62,7 +62,7 @@ mkdir -p "$INITRD_SECRETS_DIR" \
 
 > [!WARNING]
 >
-> This scripts will reboot the target and requires manual intervention when providing the LUKS decrypt key.
+> This script will reboot the target and requires manual intervention when providing the LUKS decrypt key.
 
 ```bash
 bash scripts/nixos-replace-config.sh
