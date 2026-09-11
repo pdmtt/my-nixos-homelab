@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -ex
 
 WORKTREE=$(mktemp -d)
 FAKE_FACTER_FILE="facter.json"
@@ -7,9 +7,6 @@ FAKE_FACTER_FILE="facter.json"
 cleanup() {
     git worktree remove --force "$WORKTREE" 2>/dev/null || true
     rm -rf "$WORKTREE"
-
-    git restore --staged "$FAKE_FACTER_FILE"
-    rm -f "$FAKE_FACTER_FILE"
 }
 
 setup() {
