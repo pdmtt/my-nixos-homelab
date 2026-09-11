@@ -13,7 +13,7 @@
         specialArgs = { inherit myPublicKey; };
         modules = [
           disko.nixosModules.disko
-          ./configuration.nix
+          ./config/configuration.nix
           nixos-facter-modules.nixosModules.facter
           {
             config.facter.reportPath =
