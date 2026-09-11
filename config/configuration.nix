@@ -1,7 +1,14 @@
-{ modulesPath, lib, pkgs, myPublicKey, ...  } @ args:
-let 
+{
+  modulesPath,
+  lib,
+  pkgs,
+  myPublicKey,
+  ...
+}@args:
+let
   adminUser = "admin";
-in {
+in
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -9,27 +16,27 @@ in {
   ];
 
   boot = {
-      loader = {
-        efi.canTouchEfiVariables = false;
-        grub = {
-          enable = true;
-          efiSupport = true;
-          efiInstallAsRemovable = true;
-          # no need to set devices, disko will add all devices that have a EF02 partition to the list already
-          device = "nodev";
-        };
+    loader = {
+      efi.canTouchEfiVariables = false;
+      grub = {
+        enable = true;
+        efiSupport = true;
+        efiInstallAsRemovable = true;
+        # no need to set devices, disko will add all devices that have a EF02 partition to the list already
+        device = "nodev";
       };
+    };
 
-      # we need DHCP in initrd to SSH into the machine to unlock the LUKS partition
-      # DHCP in initrd requires the ip= kernel parameter
-      kernelParams = [ "ip=dhcp" ];
+    # we need DHCP in initrd to SSH into the machine to unlock the LUKS partition
+    # DHCP in initrd requires the ip= kernel parameter
+    kernelParams = [ "ip=dhcp" ];
 
-      initrd = {
-        luks.devices.cryptroot = {
-          # uses the GPT partition label set in disk-config.nix to find the device
-          device = "/dev/disk/by-partlabel/luks-main";
-          allowDiscards = true;
-        };
+    initrd = {
+      luks.devices.cryptroot = {
+        # uses the GPT partition label set in disk-config.nix to find the device
+        device = "/dev/disk/by-partlabel/luks-main";
+        allowDiscards = true;
+      };
 
       # bring up networking in initrd so SSH is reachable before LUKS is unlocked
       # needed for remote LUKS unlocking
@@ -38,7 +45,7 @@ in {
 
         ssh = {
           enable = true;
-          port = 2222;  # different from the default port 22 to avoid known_hosts issues
+          port = 2222; # different from the default port 22 to avoid known_hosts issues
 
           # this key MUST be stored outside the encrypted partition so it is
           # available before LUKS is unlocked. Deploy it with nixos-anywhere's
@@ -66,12 +73,12 @@ in {
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
-      22    # ssh
-      3000  # adguard home web UI
-      53    # dns
+      22 # ssh
+      3000 # adguard home web UI
+      53 # dns
     ];
     allowedUDPPorts = [
-      53    # dns
+      53 # dns
     ];
   };
 
@@ -98,7 +105,7 @@ in {
 
     openssh = {
       enable = true;
-      settings = { 
+      settings = {
         PermitRootLogin = "no";
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
@@ -119,5 +126,8 @@ in {
     initialPassword = "admin";
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 }

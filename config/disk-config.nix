@@ -11,7 +11,7 @@
             # this partition allows BIOS systems to function on GPT disks
             size = "1M";
             type = "EF02";
-            priority = 1;  # first on disk, as required by MBR bootloaders
+            priority = 1; # first on disk, as required by MBR bootloaders
           };
 
           esp = {
@@ -47,20 +47,20 @@
     };
 
     lvm_vg.pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "filesystem";
-              format = "ext4";
-              mountpoint = "/";
-              mountOptions = [
-                "defaults"
-              ];
-            };
+      type = "lvm_vg";
+      lvs = {
+        root = {
+          size = "100%FREE";
+          content = {
+            type = "filesystem";
+            format = "ext4";
+            mountpoint = "/";
+            mountOptions = [
+              "defaults"
+            ];
           };
         };
       };
+    };
   };
 }
