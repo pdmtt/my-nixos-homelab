@@ -8,5 +8,8 @@
 # Arguments:
 #   <target-host-name>: The name of the target machine in the data.local directory
 
-source scripts/stage-facter-file.sh "${1:?}"
+if [ ! -f facter.json ]; then
+    source scripts/stage-facter-file.sh "${1:?}"
+fi
+
 nix run nixpkgs#nixos-rebuild -- dry-build --flake .#default
