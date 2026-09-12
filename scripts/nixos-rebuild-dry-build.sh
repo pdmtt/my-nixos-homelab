@@ -3,10 +3,10 @@
 # Performs a dry build of the NixOS configuration
 #
 # Usage:
-#   bash scripts/nixos-rebuild-dry-build.sh
+#   bash scripts/nixos-rebuild-dry-build.sh [<target-host-name>]
 #
 # Arguments:
-#   <target-host-name>: The name of the target machine in the data.local directory
+#   <target-host-name>: The name of the target machine in the data.local directory, if no facter.json is in the current directory
 
 if [ ! -f facter.json ]; then
     source scripts/stage-facter-file.sh "${1:?}"

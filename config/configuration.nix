@@ -55,15 +55,6 @@ in
           # Your own public key — paste the contents of ~/.ssh/id_ed25519.pub
           authorizedKeys = [ myPublicKey ];
         };
-
-        # after SSH login, automatically prompt for the LUKS passphrase
-        postCommands = ''
-          cat <<'EOF' >> /root/.profile
-          if pgrep -x "cryptsetup" > /dev/null; then
-            cryptsetup-askpass
-          fi
-          EOF
-        '';
       };
     };
   };
