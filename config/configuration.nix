@@ -27,10 +27,6 @@ in
       };
     };
 
-    # we need DHCP in initrd to SSH into the machine to unlock the LUKS partition
-    # DHCP in initrd requires the ip= kernel parameter
-    kernelParams = [ "ip=dhcp" ];
-
     initrd = {
       luks.devices.cryptroot = {
         # uses the GPT partition label set in disk-config.nix to find the device
@@ -42,6 +38,9 @@ in
       # needed for remote LUKS unlocking
       network = {
         enable = true;
+
+        # we need DHCP in initrd to SSH into the machine to unlock the LUKS partition
+        useDHCP = true;
 
         ssh = {
           enable = true;
