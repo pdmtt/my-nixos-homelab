@@ -36,7 +36,8 @@ reboot_target() {
 
 prompt_for_luks_password() {
     local target_host_ip="${1:?}"
-    ssh -o "ConnectTimeout=10" -o "ConnectionAttempts=15" -p 2222 -t "root@${target_host_ip:?}" cryptsetup-askpass
+    # generous attempts to allow the machine to reboot and come back online
+    ssh -o "ConnectTimeout=10" -o "ConnectionAttempts=15" -p 2222 -t "root@${target_host_ip:?}" systemctl default
 }
 
 set -ex
@@ -44,5 +45,4 @@ source scripts/stage-facter-file.sh "${1:?}"
 TARGET_HOST_IP="$(output_target_ip "${1:?}")"
 nix_rebuild_switch_target "$TARGET_HOST_IP"
 reboot_target "$TARGET_HOST_IP"
-sleep 10 # give the target machine some time to reboot
 prompt_for_luks_password "$TARGET_HOST_IP"
