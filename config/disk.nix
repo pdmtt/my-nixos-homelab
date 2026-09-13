@@ -57,6 +57,9 @@
             mountpoint = "/";
             mountOptions = [
               "defaults"
+              # systemd stage 1 gives up waiting for the root device after 90s, which
+              # is too short when the LUKS passphrase is typed in remotely
+              "x-systemd.device-timeout=infinity"
             ];
           };
         };
