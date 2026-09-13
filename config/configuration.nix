@@ -15,6 +15,10 @@ in
     ./disk.nix
   ];
 
+  # nixos shares this setting with initrd: with boot.initrd.network.enable, systemd stage 1 gets
+  # DHCP networkd configs from this, which SSH needs to unlock the LUKS partition
+  networking.useDHCP = true;
+
   boot = {
     loader = {
       efi.canTouchEfiVariables = false;
@@ -29,7 +33,7 @@ in
 
     initrd = {
       luks.devices.cryptroot = {
-        # uses the GPT partition label set in disk-config.nix to find the device
+        # uses the GPT partition label set in disk.nix to find the device
         device = "/dev/disk/by-partlabel/luks-main";
         allowDiscards = true;
       };
@@ -38,9 +42,6 @@ in
       # needed for remote LUKS unlocking
       network = {
         enable = true;
-
-        # we need DHCP in initrd to SSH into the machine to unlock the LUKS partition
-        useDHCP = true;
 
         ssh = {
           enable = true;
