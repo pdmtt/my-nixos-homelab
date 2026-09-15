@@ -13,6 +13,7 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk.nix
+    ./nix.nix
     ./tailscale.nix
   ];
 
@@ -117,9 +118,4 @@ in
     openssh.authorizedKeys.keys = [ myPublicKey ];
     initialPassword = "admin";
   };
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
 }
