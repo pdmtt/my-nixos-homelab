@@ -13,6 +13,7 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk.nix
+    ./tailscale.nix
   ];
 
   # nixos shares this setting with initrd: with boot.initrd.network.enable, systemd stage 1 gets

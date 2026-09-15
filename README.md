@@ -5,8 +5,9 @@ The setup of my self-hosted services using the `nix` ecosystem.
 ## Features
 
 - Works on both BIOS and UEFI machines
-- Encryption at rest using LVM on LUKS
-- Allows LAN uncryption by SSHing into initrd
+- Disk encryption at rest using LVM on LUKS
+- Allows LAN decryption of disk by SSHing into initrd
+- Stage 2 is reachable from the internet using Tailscale
 - Security hardened: /boot readable only by root, SSH pass auth off and root login blocked
 
 ## Requirements
@@ -15,24 +16,10 @@ You need `nix` installed.
 
 ## Installing NixOS on a new machine
 
-I use [`nixos-anywhere`](https://nix-community.github.io/nixos-anywhere/) to install NixOS on a new machine already set
-up with this configuration.
+[`nixos-anywhere`](https://nix-community.github.io/nixos-anywhere/) is used to install NixOS remotely on a new machine 
+with the configuration specified in `config/`.
 
-As per its [Github repository](https://github.com/nix-community/nixos-anywhere)'s README:
-
-> Setting up a new machine is time-consuming, and becomes complicated when it needs to be done remotely. If you're installing NixOS, the nixos-anywhere tool allows you to pre-configure the whole process including:
->
-> - Disk partitioning and formatting
-> - Configuring and installing NixOS
-> - Installing additional files and software
->
-> You can then initiate an unattended installation with a single CLI command. Since nixos-anywhere can access the new machine using SSH, it's ideal for remote installations.
->
-> Once you have initiated the command, there is no need to 'babysit' the installation. It all happens automatically.
->
-> You can use the stored configuration to repeat the same installation if you need to.
-
-### Command
+The following script SHOULD be executed once per machine:
 
 > [!WARNING]
 >
@@ -57,6 +44,12 @@ mkdir -p "$INITRD_SECRETS_DIR" \
 >
 > This command will write a `facter.json` file to your local machine. This file is gitignored, but SHOULD be kept because
 > it is needed for future configuration changes.
+
+To allow secure access to the machine from the internet, SSH into the machine, run the following command and complete
+the login process:
+```bash
+sudo tailscale up
+```
 
 ## Switching to a new NixOS configuration on an existing installation
 
