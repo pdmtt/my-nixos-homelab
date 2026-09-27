@@ -60,3 +60,36 @@ sudo tailscale up
 ```bash
 bash scripts/nixos-replace-config.sh
 ```
+
+## Shipping logs from other devices
+
+The homelab aggregates systemd journals in [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/), listening
+on port 9428 over the tailnet only. Its web UI is available at `http://homelab:9428/select/vmui`.
+
+Any systemd-based device in the tailnet can ship its journal with `systemd-journal-upload`, no extra agent needed.
+
+1. Install `systemd-journal-upload`. It is packaged as `systemd-journal-remote` on Debian/Ubuntu:
+   ```bash
+   sudo apt install systemd-journal-remote
+   ```
+
+2. Point it at the homelab by setting `URL` in the `[Upload]` section of `/etc/systemd/journal-upload.conf`:
+   ```ini
+   [Upload]
+   URL=http://homelab:9428/insert/journald
+   ```
+
+3. Enable the service:
+   ```bash
+   sudo systemctl enable --now systemd-journal-upload
+   ```
+
+The upload service saves its position in the journal, so a device that goes offline resumes where it stopped. 
+On the first run it uploads the whole local journal. 
+Entries older than the retention period (see `config/logs.nix`) are discarded.
+
+To check that the device's entries are arriving:
+```bash
+curl -s http://homelab:9428/select/logsql/query \
+    --data-urlencode 'query=_time:5m | stats by (_HOSTNAME) count() entries'
+```
