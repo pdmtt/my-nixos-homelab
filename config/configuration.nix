@@ -13,6 +13,7 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
     ./disk.nix
+    ./logs.nix
     ./nix.nix
     ./tailscale.nix
   ];
